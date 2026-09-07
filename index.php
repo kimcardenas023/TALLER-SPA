@@ -202,7 +202,7 @@ function solicitar_dia(): string // no recibe parametro pero debe
 
 
 // funcion: SOLICITAR SERVICIO 
-// Esta funcion imprime una tabla
+
 
 function solicitar_servicio(array $servicios): int
               //array $servicios -> recibe el catalogo de servicios
@@ -241,9 +241,6 @@ function solicitar_servicio(array $servicios): int
                                 // FUNCIONES DE MOSTRAR INFORMACION //
 // mostrar_empleados()
 // mostrar_servicios()
-
-// REALIZAN -> recorrer → mostrar → organizar la informacion
-
 
 
 
@@ -292,9 +289,6 @@ function mostrar_servicios(array $servicios): void{
 // calcular_total_cita()
 // obtener_nombres_servicios()
 
-// REALIZAN ->recorrer informacion y obtener un resultado
-
-
 
 // FUNCIONES DE CALCULO
 
@@ -305,9 +299,9 @@ function calcular_duracion_cita(array $cita, array $servicios): int
 //estamos recorriendo solamente los servicios que cierta cita
 
 {
-    $duracion_total = 0; //contador para sumar las duraciones
+    $duracion_total = 0; //acumulador para sumar las duraciones
 
-    foreach ($cita['servicios'] as $numero_servicio) {
+    foreach ($cita['servicios'] as $numero_servicio) { //arreglo de la cita e ind de serv..
         $duracion_total += $servicios[$numero_servicio]['duracion'];
         // += -> sumarle algo a lo que ya tiene la variable
 
@@ -326,7 +320,7 @@ function calcular_total_cita(array $cita, array $servicios): int
 
     foreach ($cita['servicios'] as $numero_servicio) {
         //$cita['servicios']->  Dame los servicios que tiene la cita
-        // as $numero_servicio) -> variable guarda cada servicio mientras se recorre el array
+        // as $numero_servicio) -> variable guarda cada servicio mientras recorre el array
 
         $total += $servicios[$numero_servicio]['precio'];
         // busca el precio del servicio actual y lo suma al total
@@ -339,7 +333,7 @@ function calcular_total_cita(array $cita, array $servicios): int
 
 // funcion: OBTENER NOMBRES DE SERVICIOS
 
-function obtener_nombres_servicios(array $cita, array $servicios): string
+function obtener_nombres_servicios(array $cita, array $servicios): string //masaje - manicure
 {
     $nombres = [];
 
@@ -392,6 +386,7 @@ function registrar_empleado(array &$agenda): void //no devuelve nada
 // REGISTRO DE CITAS
 
 // funcion: REGISTRAR CITA
+//Pide y valida el numero del servicio
 
 function registrar_cita(array &$agenda, array $servicios): void
 {
@@ -466,22 +461,19 @@ function mostrar_total_facturado(array $agenda, array $servicios): void
 
     $facturacion = calcular_facturacion_empleados($agenda, $servicios);
 
-    echo "\n";
-    echo "============= FACTURACIÓN =============\n";
-    echo str_pad("Empleado", 25);
-    echo str_pad("Citas", 10);
-    echo "Total facturado\n";
-    echo str_repeat("-", 55) . "\n";
+       echo "\n";
+    echo "========= FACTURACIÓN =========\n";
+    echo "Empleado | Citas | Total facturado\n";
+    echo "----------------------------------\n";
 
     foreach ($facturacion as $numero_empleado => $total) {
-        $cantidad_citas = count($agenda[$numero_empleado]['citas']);
-
-        echo str_pad($agenda[$numero_empleado]['nombre'], 25);
-        echo str_pad((string) $cantidad_citas, 10);
+       
+    $cantidad_citas = count($agenda[$numero_empleado]['citas']);
+echo $agenda[$numero_empleado]['nombre'] . " | ";
+        echo $cantidad_citas . " | ";
         echo formatear_moneda($total) . "\n";
     }
-
-    echo str_repeat("-", 55) . "\n";
+echo "----------------------------------\n";
 }
 
 // SERVICIO MAS SOLICITADO
@@ -539,18 +531,16 @@ function mostrar_servicio_mas_solicitado(array $agenda, array $servicios): void
 
     $total_facturado = $estadisticas[$servicio_mas_solicitado]['total'];
 
-    echo "\n";
-    echo "========= SERVICIO MÁS SOLICITADO =========\n";
-    echo str_pad("Servicio", 35);
-    echo str_pad("Veces", 10);
-    echo "Total facturado\n";
-    echo str_repeat("-", 65) . "\n";
+     echo "\n";
+    echo "====== SERVICIO MAS SOLICITADO ======\n";
+    echo "Servicio | Veces | Total facturado\n";
+    echo "------------------------------------\n";
 
-    echo str_pad($servicios[$servicio_mas_solicitado]['nombre'], 35);
-    echo str_pad((string) $mayor_cantidad, 10);
+    echo $servicios[$servicio_mas_solicitado]['nombre'] . " | ";
+    echo $mayor_cantidad . " | ";
     echo formatear_moneda($total_facturado) . "\n";
 
-    echo str_repeat("-", 65) . "\n";
+    echo "------------------------------------\n";
 }
 
 // AGENDA POR DIA
@@ -602,22 +592,17 @@ function mostrar_agenda_dia(array $agenda, array $servicios): void
         return;
     }
 
-    echo str_pad("Hora", 8);
-    echo str_pad("Empleado", 25);
-    echo str_pad("Cliente", 25);
-    echo "Servicios\n";
-
-    echo str_repeat("-", 90) . "\n";
+    echo "Hora | Empleado | Cliente | Servicios\n";
+    echo "--------------------------------------\n";
 
     foreach ($citas as $cita) {
-        echo str_pad($cita['hora'] . ":00", 8);
-        echo str_pad($cita['empleado'], 25);
-        echo str_pad($cita['cliente'], 25);
-        echo obtener_nombres_servicios($cita, $servicios);
-        echo "\n";
+        echo $cita['hora'] . ":00 | ";
+        echo $cita['empleado'] . " | ";
+        echo $cita['cliente'] . " | ";
+        echo obtener_nombres_servicios($cita, $servicios) . "\n";
     }
 
-    echo str_repeat("-", 90) . "\n";
+    echo "--------------------------------------\n";
 }
 
 // Deteccion de conflictos
@@ -689,24 +674,26 @@ function mostrar_conflictos(array $agenda, array $servicios): void
         return;
     }
 
-    echo str_pad("Empleado", 20);
-    echo str_pad("Día", 12);
-    echo str_pad("Cita 1", 25);
-    echo "Cita 2\n";
-
-    echo str_repeat("-", 85) . "\n";
+      echo "Empleado | Día | Cita 1 | Cita 2\n";
+    echo "----------------------------------\n";
 
     foreach ($conflictos as $conflicto) {
-        $cita_1 = $conflicto['cliente_a'] . ' (' . $conflicto['inicio_a'] . ':00-' . $conflicto['fin_a'] . ':00)';
-        $cita_2 = $conflicto['cliente_b'] . ' (' . $conflicto['inicio_b'] . ':00-' . $conflicto['fin_b'] . ':00)';
 
-        echo str_pad($conflicto['empleado'], 20);
-        echo str_pad($conflicto['dia'], 12);
-        echo str_pad($cita_1, 25);
+        $cita_1 = $conflicto['cliente_a'] . " (" .
+                  $conflicto['inicio_a'] . ":00-" .
+                  $conflicto['fin_a'] . ":00)";
+
+        $cita_2 = $conflicto['cliente_b'] . " (" .
+                  $conflicto['inicio_b'] . ":00-" .
+                  $conflicto['fin_b'] . ":00)";
+
+        echo $conflicto['empleado'] . " | ";
+        echo $conflicto['dia'] . " | ";
+        echo $cita_1 . " | ";
         echo $cita_2 . "\n";
     }
 
-    echo str_repeat("-", 85) . "\n";
+    echo "----------------------------------\n";
 }
 
 // liquidacion DE comisiones
@@ -762,26 +749,21 @@ function mostrar_liquidacion_comisiones(array $agenda, array $servicios): void
     $comisiones = calcular_comisiones($agenda, $servicios);
 
     echo "\n";
-    echo "================ COMISIONES ================\n";
-    echo str_pad("Empleado", 22);
-    echo str_pad("Citas", 8);
-    echo str_pad("Facturado", 18);
-    echo str_pad("Comisión", 15);
-    echo str_pad("Bono", 15);
-    echo "Total\n";
-
-    echo str_repeat("-", 95) . "\n";
+    echo "============= COMISIONES =============\n";
+    echo "Empleado | Citas | Facturado | Comisión | Bono | Total\n";
+    echo "-------------------------------------------------------\n";
 
     foreach ($comisiones as $numero_empleado => $datos) {
-        echo str_pad($agenda[$numero_empleado]['nombre'], 22);
-        echo str_pad((string) $datos['citas'], 8);
-        echo str_pad(formatear_moneda($datos['facturado']), 18);
-        echo str_pad(formatear_moneda($datos['comision']), 15);
-        echo str_pad(formatear_moneda($datos['bono']), 15);
+
+        echo $agenda[$numero_empleado]['nombre'] . " | ";
+        echo $datos['citas'] . " | ";
+        echo formatear_moneda($datos['facturado']) . " | ";
+        echo formatear_moneda($datos['comision']) . " | ";
+        echo formatear_moneda($datos['bono']) . " | ";
         echo formatear_moneda($datos['total']) . "\n";
     }
 
-    echo str_repeat("-", 95) . "\n";
+    echo "-------------------------------------------------------\n";
 }
 
 // DATOS DE PRUEBA
