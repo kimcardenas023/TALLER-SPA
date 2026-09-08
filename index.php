@@ -445,7 +445,7 @@ function calcular_facturacion_empleados(array $agenda, array $servicios): array
         $facturacion[$numero_empleado] = $total;
     }
 
-    arsort($facturacion);
+    arsort($facturacion); //ordena la facturacion de mayor a menor 
 
     return $facturacion;
 }
@@ -565,7 +565,8 @@ function obtener_citas_del_dia(array $agenda, string $dia): array
     }
 
     usort($citas_del_dia, function (array $cita_a, array $cita_b): int {
-        return $cita_a['hora'] <=> $cita_b['hora'];
+        //ordenar las citas por hora con usort 
+        return $cita_a['hora'] <=> $cita_b['hora']; //operador de comparacion para ordenar
     });
 
     return $citas_del_dia;
@@ -584,7 +585,7 @@ function mostrar_agenda_dia(array $agenda, array $servicios): void
     $citas = obtener_citas_del_dia($agenda, $dia);
 
     echo "\n";
-    echo "========== AGENDA DEL DIA: " . strtoupper($dia) . " ==========\n";
+    echo "========== AGENDA DEL DIA: " . strtoupper($dia) . " ==========\n"; 
     //strtoupper -> convertir un texto completo a MAYUSCULAS 
 
     if (count($citas) === 0) {
@@ -674,7 +675,7 @@ function mostrar_conflictos(array $agenda, array $servicios): void
         return;
     }
 
-      echo "Empleado | Día | Cita 1 | Cita 2\n";
+      echo "Empleado | dia | Cita 1 | Cita 2\n";
     echo "----------------------------------\n";
 
     foreach ($conflictos as $conflicto) {
@@ -704,7 +705,15 @@ function calcular_comisiones(array $agenda, array $servicios): array
 {
     $facturacion = calcular_facturacion_empleados($agenda, $servicios);
 
-    $mayor_facturacion = count($facturacion) > 0 ? max($facturacion) : 0;
+
+    //if - else rapido
+    //condicion -v -f 
+    //operad... tern..
+
+    $mayor_facturacion = count($facturacion) > 0 ? max($facturacion) : 0;// obtener la maxima...
+    //facturacion  de lo contrario poner cero
+// operador ternario
+
     $comisiones = [];
 
     foreach ($agenda as $numero_empleado => $empleado) {
@@ -717,7 +726,7 @@ function calcular_comisiones(array $agenda, array $servicios): array
             $porcentaje = comision_baja;
         }
 
-        $comision = (int) round($total_facturado * $porcentaje);
+        $comision = (int) round($total_facturado * $porcentaje);// round -> Redondea el resultado
         $bono = 0;
 
         if ($total_facturado === $mayor_facturacion && $mayor_facturacion > 0) {
@@ -750,7 +759,7 @@ function mostrar_liquidacion_comisiones(array $agenda, array $servicios): void
 
     echo "\n";
     echo "============= COMISIONES =============\n";
-    echo "Empleado | Citas | Facturado | Comisión | Bono | Total\n";
+    echo "Empleado | Citas | Facturado | comision | Bono | Total\n";
     echo "-------------------------------------------------------\n";
 
     foreach ($comisiones as $numero_empleado => $datos) {
@@ -822,7 +831,7 @@ function cargar_datos_prueba(array &$agenda, bool &$datos_prueba_cargados): void
     echo "==========================================\n";
     echo "4 empleados registrados.\n";
     echo "15 citas registradas.\n";
-    echo "Hay citas con múltiples servicios.\n";
+    echo "Hay citas con multiples servicios.\n";
     echo "Hay un conflicto intencional.\n";
     echo "==========================================\n";
 }
@@ -840,10 +849,10 @@ function mostrar_menu(): void
     echo "1. Registrar empleado\n";
     echo "2. Registrar cita\n";
     echo "3. Total facturado por empleado\n";
-    echo "4. Servicio más solicitado\n";
+    echo "4. Servicio mas solicitado\n";
     echo "5. Agenda de un día\n";
-    echo "6. Detección de conflictos\n";
-    echo "7. Liquidación de comisiones\n";
+    echo "6. deteccion de conflictos\n";
+    echo "7. liquidacion de comisiones\n";
     echo "8. Salir\n";
     echo "==========================================\n";
 }
@@ -859,8 +868,9 @@ function iniciar_programa(array &$agenda, array $servicios, bool &$datos_prueba_
 
         $opcion = strtolower(trim(readline("Seleccione una opcion: ")));
 
-        switch ($opcion) {
-            case '1':
+             //strtolower -> convierte la respuesta a minusculas
+        switch ($opcion) { //elige entre dif opcio
+            case '1': //representa cd opc de switch 
                 if ($datos_prueba_cargados) {
                     echo "\nLa opcion 1 no esta disponible.\n";
                     echo "Los datos de prueba ya fueron cargados.\n";
